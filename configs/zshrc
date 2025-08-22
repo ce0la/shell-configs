@@ -1,0 +1,120 @@
+PS1="%F{yellow}[%D_%T]%f %B%(?..[%F{red}%?%f] )%b%# "
+
+OS_NAME=$(uname -s)
+
+MACOS_CONFIG="$HOME/.zshrc.macos"
+UBUNTU_CONFIG="$HOME/.zshrc.ubuntu"
+LINUX_GENERIC_CONFIG="$HOME/.zshrc.linux"
+
+case "$OS_NAME" in
+  "Darwin")
+    if [ -f "$MACOS_CONFIG" ]; then
+      source "$MACOS_CONFIG"
+    else
+      echo "Warning: macOS Zsh config file '$MACOS_CONFIG' not found."
+    fi
+    ;;
+  "Linux")
+    if [ -f /etc/os-release ]; then
+      . /etc/os-release
+      if [ "$ID" = "ubuntu" ]; then
+        if [ -f "$UBUNTU_CONFIG" ]; then
+          source "$UBUNTU_CONFIG"
+        else
+          echo "Warning: Ubuntu Zsh config file '$UBUNTU_CONFIG' not found."
+        fi
+      else
+        if [ -f "$LINUX_GENERIC_CONFIG" ]; then
+          source "$LINUX_GENERIC_CONFIG"
+        else
+          echo "Warning: Generic Linux Zsh config file '$LINUX_GENERIC_CONFIG' not found."
+        fi
+      fi
+    else
+      if [ -f "$LINUX_GENERIC_CONFIG" ]; then
+        source "$LINUX_GENERIC_CONFIG"
+      else
+        echo "Warning: Generic Linux Zsh config file '$LINUX_GENERIC_CONFIG' not found."
+      fi
+    fi
+    ;;
+  *)
+    echo "Warning: Unknown operating system '$OS_NAME'. No OS-specific Zsh config sourced."
+    ;;
+esac
+
+
+STARTUP_PROJECT=""
+PERSONAL_PROJECT=""
+EDITOR="/usr/bin/vim"
+VISUAL="$EDITOR"
+KUBE_EDITOR="$EDITOR"
+K8S_NS=""
+USER="$(whoami)"
+
+autoload -U compinit && compinit
+eval "$(register-python-argcomplete pipx)"
+autoload -U bashcompinit && bashcompinit
+
+alias ll="ls -la"
+
+alias awk="/opt/homebrew/bin/gawk"
+alias ghci="gh run list --repo"
+
+alias sqlbash="docker exec -it mysql bash"
+alias kind-"$STARTUP_PROJECT"="kind create cluster --name "$STARTUP_PROJECT" --config kind-config.yaml"
+
+alias g="git"
+alias ga="git add"
+alias gap="git add -p"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gs="git status"
+alias gps="git push"
+alias gpl="git pull"
+
+alias d="docker"
+
+alias k="kubectl"
+alias dev="ssh $USER@192.168.64.4"
+alias dockerx="docker buildx build --platform linux/amd64"
+alias kg="kubectl get -n $K8S_NS"
+alias kgp="kubectl get pods -n $K8S_NS"
+alias kd="kubectl describe -n $K8S_NS"
+alias kdp="kubectl describe pod -n $K8S_NS"
+alias kdel="kubectl delete pod -n $K8S_NS"
+alias keit="kubectl exec $1 --it -- $2"
+alias klogs="kubectl logs -n $K8S_NS"
+
+alias tf="terraform"
+alias tfi="terraform init"
+alias tfp="terraform plan"
+alias tfa="terraform apply"
+alias tfa-a="terraform apply -auto-approve"
+
+alias infra="cd $HOME/Documents/$STARTUP_PROJECT/infrastructure"
+alias setup="cd $HOME/Documents/$STARTUP_PROJECT/setup"
+alias dev-env="source $(git rev-parse --show-toplevel)/init-dev-env.sh"
+
+alias control="ssh -i ~/.ssh/id_ed25519 root@$CP_SERVER"
+
+# The following lines have been added by Docker Desktop to enable Docker CLI completions.
+fpath=($HOME/.docker/completions $fpath)
+autoload -Uz compinit
+compinit
+# End of Docker CLI completions
+
+source <(hcloud completion zsh)
+source <(kind completion zsh)
+source <(kops completion zsh)
+source <(kubectl completion zsh)
+source <(helm completion zsh)
+source <(helmfile completion zsh)
+source <(cilium completion zsh)
+source <(hubble completion zsh)
+
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/terraform terraform
+
+# Created by `pipx` on 2025-07-21 19:16:21
+export PATH="$PATH:$HOME/.local/bin"

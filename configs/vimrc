@@ -1,0 +1,95 @@
+" ==============================================================================
+"  Vim-Plug Configuration
+"  (Replaces Vundle setup - choose only one plugin manager!)
+" ==============================================================================
+
+" Specify a directory for plugins
+" For Neovim: stdpath('data') . '/plugged'
+" For Vim: '~/.vim/plugged'
+call plug#begin(has('nvim') ? stdpath('data') . '/plugged' : '~/.vim/plugged')
+
+" --- Plugin List ---
+" Let Vim-Plug manage itself
+Plug 'junegunn/vim-plug'
+
+" General useful plugins
+Plug 'tpope/vim-sensible' " Sensible Vim defaults
+Plug 'junegunn/seoul256.vim' " Your color scheme
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " Your Rust autocompleter (Language Server Protocol client)
+Plug 'tpope/vim-fugitive' " Git wrapper
+Plug 'wincent/command-t' " Example of a Git plugin not on GitHub
+Plug 'rstacruz/sparkup', {'rtp': 'vim/'} " Example with rtp option
+Plug 'morhetz/gruvbox'
+Plug 'ervandew/supertab'
+
+" --- End of Plugin List ---
+call plug#end()
+
+" ==============================================================================
+"  General Vim Settings
+" ==============================================================================
+
+set nocompatible      " Be iMproved - required for Vim-Plug and modern Vim features
+filetype plugin indent on " Enable filetype detection, plugins, and indentation
+
+" --- Basic UI and Navigation ---
+set number            " Show line numbers
+set relativenumber    " Show relative line numbers (useful for navigation)
+set cursorline        " Highlight the current line
+set showmatch         " Show matching brackets
+set showcmd           " Show incomplete commands
+set path+=**/*/       " Enhance :find for file exploring
+set wildmenu          " Enhances command-line completion by matching patterns
+set wildoptions=pum   " Enable window popup while in autocomplete mode (used with wildmenu)
+
+" --- Indentation Settings ---
+" These are global defaults.
+set tabstop=2         " A tab character counts as 2 spaces
+set shiftwidth=2      " Number of spaces for (auto)indentation
+set expandtab         " Use spaces instead of tabs (crucial for consistent YAML)
+set autoindent        " Copy indent from current line when starting a new line
+set smartindent       " Smarter auto-indent for C-like languages
+
+" --- Paste Mode Toggle ---
+" This is essential to prevent Vim from auto-indenting/commenting when pasting.
+" Press <F2> (or your chosen key) before pasting, then again after.
+set pastetoggle=<F2>
+
+" --- Search Settings ---
+set incsearch         " Highlight matches as you type
+set hlsearch          " Highlight all search matches
+set ignorecase        " Ignore case in search patterns
+set smartcase         " Override 'ignorecase' if search pattern contains uppercase
+
+" --- Visuals ---
+syntax on             " Enable syntax highlighting
+colorscheme gruvbox
+set background=dark " or light for the light variant
+set t_Co=256
+" colorscheme seoul256  " Set your chosen color scheme
+
+" --- Performance ---
+set lazyredraw        " Don't redraw screen during macros/scripts (can speed things up)
+set ttyfast           " Assume a fast terminal connection
+
+" ==============================================================================
+"  Filetype-Specific Settings
+" ==============================================================================
+
+" YAML specific settings: Ensure 2-space indentation for YAML files.
+" This autocmd overrides global settings if they were different, but since
+" your global settings are already 2-space, this primarily ensures it.
+autocmd FileType yaml setlocal tabstop=2 shiftwidth=2 expandtab autoindent
+
+" Example: Python specific settings (if you wanted 4 spaces for Python)
+" autocmd FileType python setlocal tabstop=4 shiftwidth=4 expandtab autoindent
+
+" Set leader key
+let mapleader = ","
+
+" Map <leader>f to the :find command
+nnoremap <leader>f :find 
+
+" ==============================================================================
+"  End of .vimrc Configuration
+" ==============================================================================

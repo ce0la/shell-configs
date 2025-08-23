@@ -1,4 +1,5 @@
 PS1="%F{yellow}[%D_%T]%f %B%(?..[%F{red}%?%f] )%b%# "
+RPS1="%B%F{green}%1~%f%b"
 
 STARTUP_PROJECT=""
 PERSONAL_PROJECT=""
@@ -9,10 +10,6 @@ EDITOR="/usr/bin/vim"
 VISUAL="$EDITOR"
 KUBE_EDITOR="$EDITOR"
 USER="$(whoami)"
-
-autoload -U compinit && compinit
-eval "$(register-python-argcomplete pipx)"
-autoload -U +X bashcompinit && bashcompinit
 
 alias ll="ls -la"
 
@@ -58,12 +55,6 @@ alias dev-env="source $(git rev-parse --show-toplevel)/init-dev-env.sh"
 
 alias control="ssh -i ~/.ssh/id_ed25519 root@$CP_SERVER"
 
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=($HOME/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
 source <(hcloud completion zsh)
 source <(kind completion zsh)
 source <(kops completion zsh)
@@ -72,9 +63,6 @@ source <(helm completion zsh)
 source <(helmfile completion zsh)
 source <(cilium completion zsh)
 source <(hubble completion zsh)
-
-autoload -U +X bashcompinit && bashcompinit
-complete -o nospace -C /opt/homebrew/bin/terraform terraform
 
 # Created by `pipx` on 2025-07-21 19:16:21
 export PATH="$PATH:$HOME/.local/bin"
